@@ -8,23 +8,33 @@ class Node {
 class CircularLinkedList {
   constructor() {
     this.head = null;
-    this.size = 0;
+    this.tail = null;
   }
 
-  add(data) {
+  append(data) {
     const newNode = new Node(data);
     if (!this.head) {
       this.head = newNode;
+      this.tail = newNode;
       newNode.next = this.head;
     } else {
-      let current = this.head;
-      while (current.next !== this.head) {
-        current = current.next;
-      }
-      current.next = newNode;
-      newNode.next = this.head;
+      this.tail.next = newNode;
+      this.tail = newNode;
+      this.tail.next = this.head;
     }
-    this.size++;
+  }
+
+  prepend(data) {
+    const newNode = new Node(data);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+      newNode.next = this.head;
+    } else {
+      newNode.next = this.head;
+      this.tail.next = newNode;
+      this.head = newNode;
+    }
   }
 
   get(data) {
@@ -57,39 +67,28 @@ class CircularLinkedList {
   }
 
   remove(data) {
-    if (!this.head) return false;
-
-    if (this.head.data === data) {
-      if (this.head.next === this.head) {
-        this.head = null;
-      } else {
-        let current = this.head;
-        while (current.next !== this.head) {
-          current = current.next;
-        }
-        current.next = this.head.next;
-        this.head = this.head.next;
-      }
-      this.size--;
-
-      return true;
-    }
+    if (!this.head) return;
 
     let current = this.head;
+    let prev = this.tail;
+
     do {
-      if (current.next.data === data) {
-        current.next = current.next.next;
-        this.size--;
-        return true;
+      if (current.data === data) {
+        if (current === this.head) {
+          this.tail.next = this.head.next;
+          this.head = this.head.next;
+        } else {
+          prev.next = current.next;
+        }
+        return;
       }
+      prev = current;
       current = current.next;
     } while (current !== this.head);
-
-    return false;
   }
 
   print() {
-    if (!this.head) return console.log("Список пуст");
+    if (!this.head) return console.log('Список пуст');
 
     let current = this.head;
     const elements = [];
@@ -97,15 +96,18 @@ class CircularLinkedList {
       elements.push(current.data);
       current = current.next;
     } while (current !== this.head);
-    console.log(elements.join(" -> ")); 
+    console.log(elements.join(' -> '));
   }
 }
 
 const circularList = new CircularLinkedList();
-circularList.add(10);
-circularList.add(20);
-circularList.add(30);
+circularList.append(10);
+circularList.append(20);
+circularList.append(30);
 
+circularList.print();
+
+circularList.prepend(111);
 circularList.print();
 
 console.log(circularList.get(20));

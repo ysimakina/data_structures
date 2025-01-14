@@ -8,19 +8,32 @@ class Node {
 class LinkedList {
   constructor() {
     this.head = null;
+    this.tail = null;
     this.size = 0;
   }
 
-  add(data) {
+  append(data) {
     const newNode = new Node(data);
     if (!this.head) {
       this.head = newNode;
+      this.tail = newNode;
     } else {
-      let current = this.head;
-      while (current.next) {
-        current = current.next;
-      }
-      current.next = newNode;
+      this.tail.next = newNode;
+      console.log('this.tail.next', this.tail.next)
+      this.tail = newNode;
+      console.log('this.tail', this.tail)
+    }
+    this.size++;
+  }
+
+  prepend(data) {
+    const newNode = new Node(data);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      newNode.next = this.head;
+      this.head = newNode;
     }
     this.size++;
   }
@@ -52,6 +65,9 @@ class LinkedList {
     if (!this.head) return false;
 
     if (this.head.data === data) {
+      if (this.head === this.tail) {
+        this.tail = null;
+      }
       this.head = this.head.next;
       this.size--;
       return true;
@@ -60,6 +76,9 @@ class LinkedList {
     let current = this.head;
     while (current.next) {
       if (current.next.data === data) {
+        if (current.next === this.tail) {
+          this.tail = current;
+        }
         current.next = current.next.next;
         this.size--;
         return true;
@@ -83,11 +102,15 @@ class LinkedList {
 }
 
 const linkedList = new LinkedList();
-linkedList.add(10);
-linkedList.add(20);
-linkedList.add(30);
+linkedList.append(10);
+linkedList.append(20);
+linkedList.append(30);
 
 console.log(linkedList.get(20));
+linkedList.print();
+
+linkedList.prepend(111);
+linkedList.print();
 
 linkedList.update(20, 25);
 linkedList.print();

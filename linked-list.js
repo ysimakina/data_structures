@@ -19,9 +19,7 @@ class LinkedList {
       this.tail = newNode;
     } else {
       this.tail.next = newNode;
-      console.log('this.tail.next', this.tail.next)
       this.tail = newNode;
-      console.log('this.tail', this.tail)
     }
     this.size++;
   }
